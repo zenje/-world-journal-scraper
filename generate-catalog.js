@@ -1,11 +1,25 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const argv = yargs(hideBin(process.argv)).argv;
+const term = argv.term;
+
+if (!term) {
+  console.error('Please provide a search term using --term');
+  process.exit(1);
+}
 
 async function generateCatalog(term) {
   const articlesDir = path.join(__dirname, 'data', term, 'articles');
+  if (!await fs.exists(articlesDir)) {
+    console.error(`Directory not found: ${articlesDir}`);
+    return;
+  }
+  
   const files = await fs.readdir(articlesDir);
   const articles = [];
 
@@ -16,7 +30,7 @@ async function generateCatalog(term) {
       // Extract metadata
       const titleMatch = content.match(/^# (.*)/m);
       const dateMatch = content.match(/\*\*Date:\*\* ([\d-]+)/);
-      const englishTitleMatch = content.match(/## (.*)/m); // Assuming English title is the first heading after '---'
+      const englishTitleMatch = content.match(/## (.*)/m); 
       
       articles.push({
         file,
@@ -42,5 +56,4 @@ async function generateCatalog(term) {
   console.log(`Catalog generated for ${term}`);
 }
 
-const term = '彭丽荷';
 generateCatalog(term);
