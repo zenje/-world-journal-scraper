@@ -30,12 +30,29 @@ async function generateCatalog(term) {
       // Extract metadata
       const titleMatch = content.match(/^# (.*)/m);
       const dateMatch = content.match(/\*\*Date:\*\* ([\d-]+)/);
-      const englishTitleMatch = content.match(/## (.*)/m); 
+      
+      // Find the translation section - looking for ## [Translated Title] then the text until ## Key Vocabulary
+      const translationSectionMatch = content.match(/## (?:[^\n]*)\n([\s\S]*?)\n\n## Key Vocabulary/m);
+      
+      let summary = 'No summary available';
+      let englishTitle = 'No translation';
+      
+      const englishTitleMatch = content.match(/^## (.*)/m);
+      if (englishTitleMatch) englishTitle = englishTitleMatch[1];
+
+      if (translationSectionMatch) {
+         // Clean up translation text: remove newlines, trim
+         const translation = translationSectionMatch[1].replace(/\n+/g, ' ').trim();
+         // Split into sentences
+         const sentences = translation.split(/[.!?](?:\s|$)/).filter(s => s.trim().length > 0);
+         summary = sentences.slice(0, 2).join('. ') + '.';
+      }
       
       articles.push({
         file,
         title: titleMatch ? titleMatch[1] : 'Unknown',
-        englishTitle: englishTitleMatch ? englishTitleMatch[1] : 'No translation',
+        englishTitle,
+        summary,
         date: dateMatch ? dateMatch[1] : '0000-00-00'
       });
     }
@@ -46,10 +63,12 @@ async function generateCatalog(term) {
 
   // Generate README content
   let mdContent = `# Article Catalog: ${term}\n\n`;
-  mdContent += `| Date | Chinese Title | English Title |\n| --- | --- | --- |\n`;
+  mdContent += `| Date | Chinese Title | English Title | Summary |\n| --- | --- | --- | --- |\n`;
   
   for (const article of articles) {
-    mdContent += `| ${article.date} | [${article.title}](articles/${encodeURIComponent(article.file)}) | ${article.englishTitle} |\n`;
+    // Escape pipes and remove any rogue newlines to prevent table breaks
+    const safeSummary = article.summary.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+    mdContent += `| ${article.date} | [${article.title}](articles/${encodeURIComponent(article.file)}) | ${article.englishTitle} | ${safeSummary} |\n`;
   }
 
   await fs.writeFile(path.join(__dirname, 'data', term, 'README.md'), mdContent);
