@@ -25,41 +25,46 @@ async function main() {
     await checkLinks(searchTerm);
     return;
   }
-  // ... (rest of main)
 
-async function checkLinks(searchTerm) {
-  const encodedTerm = encodeURIComponent(searchTerm);
-  let page = 1;
-  const urlsToCheck = [];
-  while (true) {
-    console.log(`Fetching page ${page}...`);
-    const response = await axios.get(`https://www.worldjournal.com/api/more?page=${page}&id=${encodedTerm}&channelId=8877&type=searchword&zh-cn`);
-    const { lists, end } = response.data;
-    if (!lists || lists.length === 0) break;
-    urlsToCheck.push(...lists.map(a => a.titleLink));
-    if (end) break;
-    page++;
+  if (targetUrl) {
+    console.log(`Scraping single URL: ${targetUrl}`);
+    await scrapeArticle({ titleLink: targetUrl }, true, searchTerm);
+    return;
   }
 
-  console.log(`Checking ${urlsToCheck.length} URLs for 404s...`);
-  const failures = [];
-  for (const url of urlsToCheck) {
-    try {
-      await axios.get(`${url}?zh-cn`);
-      console.log(`OK: ${url}`);
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        console.log(`404 detected: ${url}`);
-        failures.push(url);
+  if (!term) {
+    console.error('Please provide a search term using --term, or a URL using --url');
+    process.exit(1);
+  }
+
+  const baseDir = path.join(__dirname, 'data', searchTerm);
+  const articlesDir = path.join(baseDir, 'articles');
+  await fs.ensureDir(articlesDir);
+
+  let urlsToScrape = [];
+  if (recover) {
+    const failedLogs = path.join(baseDir, 'detected_failures.log');
+    if (await fs.exists(failedLogs)) {
+      const logs = await fs.readFile(failedLogs, 'utf-8');
+      urlsToScrape = logs.split('\n').filter(Boolean);
+    }
+  } else {
+    // Standard discovery
+    const encodedTerm = encodeURIComponent(searchTerm);
+    let page = 1;
+    while (page <= 100) {
+      console.log(`Fetching discovery page ${page}...`);
+      try {
+        const response = await axios.get(`https://www.worldjournal.com/api/more?page=${page}&id=${encodedTerm}&channelId=8877&type=searchword&last_page=100&zh-cn`);
+        const { lists } = response.data;
+        if (!lists || lists.length === 0) break;
+        urlsToScrape.push(...lists.map(a => a.titleLink));
+        page++;
+      } catch (err) {
+        break;
       }
     }
-    await new Promise(resolve => setTimeout(resolve, 200));
   }
-
-  const logPath = path.join(__dirname, 'data', searchTerm, 'detected_failures.log');
-  await fs.writeFile(logPath, failures.join('\n') + '\n');
-  console.log(`Check complete. ${failures.length} failures logged to ${logPath}`);
-}
 
   console.log(`Processing ${urlsToScrape.length} URLs...`);
   const report = { success: [], failed: [] };
@@ -77,19 +82,51 @@ async function checkLinks(searchTerm) {
   if (report.failed.length > 0) console.log('Failed URLs:', report.failed);
 }
 
+async function checkLinks(searchTerm) {
+  const encodedTerm = encodeURIComponent(searchTerm);
+  let page = 1;
+  const urlsToCheck = [];
+  
+  while (page <= 100) {
+    console.log(`Fetching discovery page ${page}...`);
+    try {
+      const response = await axios.get(`https://www.worldjournal.com/api/more?page=${page}&id=${encodedTerm}&channelId=8877&type=searchword&last_page=100&zh-cn`);
+      const { lists } = response.data;
+      if (!lists || lists.length === 0) break;
+      urlsToCheck.push(...lists.map(a => a.titleLink));
+      page++;
+    } catch (err) {
+      break;
+    }
+  }
+
+  console.log(`Checking ${urlsToCheck.length} URLs for 404s...`);
+  const failures = [];
+  for (const url of urlsToCheck) {
+    try {
+      await axios.get(`${url}?zh-cn`);
+      console.log(`OK: ${url}`);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.log(`404 detected: ${url}`);
+        failures.push(url);
+      } else {
+        console.log(`Error checking ${url}: ${error.message}`);
+      }
+    }
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+
+  const logPath = path.join(__dirname, 'data', searchTerm, 'detected_failures.log');
+  await fs.writeFile(logPath, failures.join('\n') + '\n');
+  console.log(`Check complete. ${failures.length} failures logged to ${logPath}`);
+}
+
 async function scrapeArticle(article, isRecoverMode, searchTerm) {
   let url = `${article.titleLink}?zh-cn`;
   let isArchived = false;
 
-  // Pre-check: Does the file already exist?
   const articleId = path.basename(article.titleLink);
-  const files = await fs.readdir(path.join(__dirname, 'data', searchTerm, 'articles'));
-  
-  // We need a way to guess the filename to check for existence without parsing the whole HTML first
-  // The filename depends on date and title, which we don't know until we fetch.
-  // As a simpler approach: check if any file in the directory contains the articleId or similar unique identifier
-  // However, given our current structure, checking existence is hard without fetching.
-  // A better approach is to check if we already have the JSON metadata file, which we save.
   const jsonPath = path.join(__dirname, 'data', searchTerm, `${articleId}.json`);
   if (await fs.exists(jsonPath)) {
     console.log(`Skipping existing article: ${articleId}`);
@@ -124,7 +161,6 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
 
 async function processAndSave(html, url, originalLink, isArchived, searchTerm) {
   const $ = cheerio.load(html);
-  // Aggressively remove unwanted elements
   $('script, style, .article-content__ads, .admarutag, [id^="div-gpt-ad"], .article-content__nav, .tips, .article-content__sidebar, #div-gpt-ad-1617286621665-0, .article-content__lastnews, .article-content__nextnews').remove();
   $('div:contains("上一则"), div:contains("下一则")').remove();
   $('a[href*="from=wj_lastnews_story"], a[href*="from=wj_nextnews_story"]').parent().parent().remove();
