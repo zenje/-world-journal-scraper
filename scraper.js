@@ -76,6 +76,21 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
   let url = `${article.titleLink}?zh-cn`;
   let isArchived = false;
 
+  // Pre-check: Does the file already exist?
+  const articleId = path.basename(article.titleLink);
+  const files = await fs.readdir(path.join(__dirname, 'data', searchTerm, 'articles'));
+  
+  // We need a way to guess the filename to check for existence without parsing the whole HTML first
+  // The filename depends on date and title, which we don't know until we fetch.
+  // As a simpler approach: check if any file in the directory contains the articleId or similar unique identifier
+  // However, given our current structure, checking existence is hard without fetching.
+  // A better approach is to check if we already have the JSON metadata file, which we save.
+  const jsonPath = path.join(__dirname, 'data', searchTerm, `${articleId}.json`);
+  if (await fs.exists(jsonPath)) {
+    console.log(`Skipping existing article: ${articleId}`);
+    return true;
+  }
+
   try {
     const response = await axios.get(url);
     await processAndSave(response.data, url, article.titleLink, isArchived, searchTerm);
