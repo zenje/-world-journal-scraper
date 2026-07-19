@@ -67,6 +67,9 @@ async function scrapeArticle(article) {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
 
+    // Remove unwanted elements
+    $('script, style, .article-content__ads, .admarutag, [id^="div-gpt-ad"], .article-content__nav, .tips').remove();
+
     const title = $('h1.article-content__title').text().trim();
     const date = $('time.article-content__time').text().trim();
     const author = $('span.article-content__author').text().trim();
