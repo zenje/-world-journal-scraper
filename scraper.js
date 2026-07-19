@@ -124,7 +124,6 @@ async function checkLinks(searchTerm) {
 
 async function scrapeArticle(article, isRecoverMode, searchTerm) {
   let url = `${article.titleLink}?zh-cn`;
-  let isArchived = false;
 
   const articleId = path.basename(article.titleLink);
   const jsonPath = path.join(__dirname, 'data', searchTerm, `${articleId}.json`);
@@ -135,20 +134,26 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
 
   try {
     const response = await axios.get(url);
-    await processAndSave(response.data, url, article.titleLink, isArchived, searchTerm);
+    await processAndSave(response.data, url, article.titleLink, false, searchTerm);
     return true;
   } catch (error) {
     if (isRecoverMode) {
       console.log(`Trying archive for: ${article.titleLink}`);
+      // Increased delay to avoid 429
+      await new Promise(resolve => setTimeout(resolve, 5000));
       try {
         const cleanUrl = article.titleLink.replace('?zh-cn', '');
         const archiveResp = await axios.get(`https://archive.org/wayback/available?url=${cleanUrl}`);
-        const snapshot = archiveResp.data.archived_snapshots?.closest?.url;
+        
+        // Robust snapshot parsing
+        const snapshot = archiveResp.data?.archived_snapshots?.closest?.url;
         console.log(`Snapshot found: ${snapshot}`);
         if (snapshot) {
           const resp = await axios.get(snapshot, { maxRedirects: 5 });
           await processAndSave(resp.data, url, cleanUrl, true, searchTerm);
           return true;
+        } else {
+          console.log(`No snapshot found for ${article.titleLink}`);
         }
       } catch (archErr) {
         console.error(`Archive request failed for ${article.titleLink}: ${archErr.message}`);
@@ -170,6 +175,9 @@ async function processAndSave(html, url, originalLink, isArchived, searchTerm) {
   const author = $('span.article-content__author').text().trim();
   const bodyHtml = $('section.article-content__editor').html();
 
+  // Improved error logging
+  if (!title) console.error('Warning: Title parsing failed');
+  if (!bodyHtml) console.error('Warning: Body parsing failed');
   if (!title || !bodyHtml) throw new Error('Content parsing failed');
 
   let markdown = turndownService.turndown(bodyHtml);
