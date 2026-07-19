@@ -41,19 +41,3 @@
 「灯」亮的时候，我心中有亮光、手上有力量、脚下有方向，它要我沿著灯光的闪亮继续前行！
 
 [世界日报](http://web.archive.org/web/20241011084335/https://www.worldjournal.com/search/tagging/8877/世界日报) [旧金山](http://web.archive.org/web/20241011084335/https://www.worldjournal.com/search/tagging/8877/旧金山) [洛杉矶](http://web.archive.org/web/20241011084335/https://www.worldjournal.com/search/tagging/8877/洛杉矶)
-
-[
-
-上一则
-
-### 告别麦教授：英国演员玛姬史密斯的舞台传奇(1934－2024)
-
-
-
-](/web/20241011084335/https://www.worldjournal.com/wj/story/122163/8256602?from=wj_lastnews_story "告别麦教授：英国演员玛姬史密斯的舞台传奇(1934－2024)")[
-
-下一则
-
-### 厨房的新玩具
-
-](/web/20241011084335/https://www.worldjournal.com/wj/story/121252/8255352?from=wj_nextnews_story "厨房的新玩具")
