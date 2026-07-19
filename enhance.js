@@ -6,7 +6,7 @@ const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-001' });
 
 const argv = yargs(hideBin(process.argv)).argv;
 const { term, file } = argv;
