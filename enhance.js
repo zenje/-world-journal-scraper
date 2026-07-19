@@ -56,7 +56,7 @@ async function enhanceArticle(filePath) {
     const cleanContent = content.split('---')[0].trim();
 
     // Format as Markdown
-    let output = `${cleanContent}\n\n**URL:** [World Journal source](${url})\n\n---\n## ${data.english_title}\n${data.english_translation}\n\n## Key Vocabulary (HSK 5+)\n| Term | Definition | HSK | Example |\n| --- | --- | --- | --- |\n`;
+    let output = `${cleanContent}\n\n---\n## ${data.english_title}\n${data.english_translation}\n\n## Key Vocabulary (HSK 5+)\n| Term | Definition | HSK | Example |\n| --- | --- | --- | --- |\n`;
     data.vocabulary.forEach(v => {
       output += `| ${v.term} | ${v.definition} | ${v.hsk_level} | ${v.example} |\n`;
     });
