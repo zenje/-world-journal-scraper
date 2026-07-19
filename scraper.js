@@ -6,11 +6,14 @@ import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import OpenCC from 'opencc-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const turndownService = new TurndownService();
+const converter = OpenCC.Converter({ from: 't', to: 'cn' });
+
 const argv = yargs(hideBin(process.argv)).argv;
 const { term, recover, url: targetUrl } = argv;
 
@@ -110,10 +113,14 @@ async function processAndSave(html, url, originalLink, isArchived, searchTerm) {
 
   if (!title || !bodyHtml) throw new Error('Content parsing failed');
 
-  const markdown = turndownService.turndown(bodyHtml);
+  let markdown = turndownService.turndown(bodyHtml);
+  if (isArchived) {
+    markdown = converter(markdown);
+  }
+
   const datePart = date.split(' ')[0] || 'unknown';
-  const prefix = isArchived ? 'recovered_' : '';
-  const fileName = `${prefix}${datePart}_${title.replace(/\//g, '-')}.md`.replace(/:/g, '');
+  const suffix = isArchived ? '_recovered' : '';
+  const fileName = `${datePart}_${title.replace(/\//g, '-')}${suffix}.md`.replace(/:/g, '');
   const mdPath = path.join(__dirname, 'data', searchTerm, 'articles', fileName);
 
   await fs.writeFile(mdPath, `# ${title}\n\n**Date:** ${date}\n**Author:** ${author}\n**URL:** ${originalLink}\n\n${markdown}`);
