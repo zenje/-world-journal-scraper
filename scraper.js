@@ -40,6 +40,7 @@ async function main() {
   const baseDir = path.join(__dirname, 'data', searchTerm);
   const articlesDir = path.join(baseDir, 'articles');
   await fs.ensureDir(articlesDir);
+  await fs.ensureDir(path.join(baseDir, 'json'));
 
   let urlsToScrape = [];
   if (recover) {
@@ -126,7 +127,7 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
   let url = `${article.titleLink}?zh-cn`;
 
   const articleId = path.basename(article.titleLink);
-  const jsonPath = path.join(__dirname, 'data', searchTerm, `${articleId}.json`);
+  const jsonPath = path.join(__dirname, 'data', searchTerm, 'json', `${articleId}.json`);
   if (await fs.exists(jsonPath)) {
     console.log(`Skipping existing article: ${articleId}`);
     return true;
@@ -134,7 +135,7 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
 
   try {
     const response = await axios.get(url);
-    await processAndSave(response.data, url, article.titleLink, false, searchTerm);
+    await processAndSave(response.data, url, article.titleLink, false, searchTerm, jsonPath);
     return true;
   } catch (error) {
     if (isRecoverMode) {
@@ -150,7 +151,7 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
         console.log(`Snapshot found: ${snapshot}`);
         if (snapshot) {
           const resp = await axios.get(snapshot, { maxRedirects: 5 });
-          await processAndSave(resp.data, url, cleanUrl, true, searchTerm);
+          await processAndSave(resp.data, url, cleanUrl, true, searchTerm, jsonPath);
           return true;
         } else {
           console.log(`No snapshot found for ${article.titleLink}`);
@@ -164,21 +165,17 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
   }
 }
 
-async function processAndSave(html, url, originalLink, isArchived, searchTerm) {
-  const $ = cheerio.load(html); console.log("DEBUG: Elements before removal:", $(".article-content__editor").length); console.log("DEBUG: Loaded HTML length:", html.length);
+async function processAndSave(html, url, originalLink, isArchived, searchTerm, jsonPath) {
+  const $ = cheerio.load(html);
   $('script, style, .article-content__ads, .admarutag, [id^="div-gpt-ad"], .article-content__nav, .tips, .article-content__sidebar, #div-gpt-ad-1617286621665-0, .article-content__lastnews, .article-content__nextnews').remove();
   $('div:contains("上一则"), div:contains("下一则")').remove();
-  $('a[href*="from=wj_lastnews_story"], a[href*="from=wj_nextnews_story"]').remove(); console.log("DEBUG: Elements after removal:", $(".article-content__editor").length);
+  $('a[href*="from=wj_lastnews_story"], a[href*="from=wj_nextnews_story"]').remove();
 
   const title = $('h1.article-content__title').text().trim();
   const date = $('time.article-content__time').text().trim();
   const author = $('span.article-content__author').text().trim();
   const bodyHtml = $('section.article-content__editor').html();
 
-  // Improved error logging
-  if (!title) console.log('DEBUG: Title parsing failed, full HTML snippet:', $.html().substring(0, 500));
-  if (!bodyHtml) console.log('DEBUG: Body parsing failed, full HTML snippet:', $.html().substring(0, 500)); else console.log('DEBUG: Body parsing found, length:', bodyHtml.length);
-  
   if (!title || !bodyHtml) throw new Error('Content parsing failed');
 
   let markdown = turndownService.turndown(bodyHtml);
@@ -191,6 +188,7 @@ async function processAndSave(html, url, originalLink, isArchived, searchTerm) {
   const fileName = `${datePart}_${title.replace(/\//g, '-')}${suffix}.md`.replace(/:/g, '');
   const mdPath = path.join(__dirname, 'data', searchTerm, 'articles', fileName);
 
+  await fs.writeJson(jsonPath, { metadata: { titleLink: originalLink }, title, date, author, url });
   await fs.writeFile(mdPath, `# ${title}\n\n**Date:** ${date}\n**Author:** ${author}\n**URL:** ${originalLink}\n\n${markdown}`);
   console.log(`Saved: ${fileName}`);
 }
