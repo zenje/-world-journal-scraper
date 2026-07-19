@@ -82,7 +82,7 @@ async function scrapeArticle(article) {
     const mdPath = path.join(articlesDir, fileName);
 
     await fs.writeJson(jsonPath, { metadata: article, title, date, author, url });
-    await fs.writeFile(mdPath, `# ${title}\n\n**Date:** ${date}\n**Author:** ${author}\n\n${markdown}`);
+    await fs.writeFile(mdPath, `# ${title}\n\n**Date:** ${date}\n**Author:** ${author}\n**URL:** ${url}\n\n${markdown}`);
     
     console.log(`Saved: ${title}`);
   } catch (error) {

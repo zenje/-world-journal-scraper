@@ -19,41 +19,46 @@ async function enhanceArticle(filePath) {
   console.log(`Processing: ${filePath}`);
   const content = await fs.readFile(filePath, 'utf-8');
   
-  // Check if already enhanced to avoid redundant API calls
-  if (content.includes('## English Translation')) {
-    console.log(`Already enhanced: ${filePath}`);
-    return;
-  }
-  
+  // Extract metadata for the prompt
+  const urlMatch = content.match(/\*\*URL:\*\* (.*)/);
+  const url = urlMatch ? urlMatch[1] : '';
+
+  // Prompt for translation and enriched vocab
   const prompt = `
     Read the following Chinese article text:
     ---
     ${content}
     ---
-    1. Translate the entire article into natural-sounding English.
-    2. Extract key vocabulary terms that are HSK level 5 or higher.
-    3. For each term, provide its English definition and its estimated HSK level (5 or 6).
+    1. Provide the English translation of the article title.
+    2. Translate the entire article content into natural-sounding English.
+    3. Extract key vocabulary terms that are HSK level 5 or higher.
+       - Sort them by their approximate frequency in Chinese (most frequent first).
+    4. For each term, provide:
+       - Its English definition.
+       - Its estimated HSK level (5 or 6).
+       - A short sentence or fragment from the original article where it appears.
     
     Return the result in JSON format ONLY, with these fields:
     {
+      "english_title": "string",
       "english_translation": "string",
-      "vocabulary": [{"term": "string", "definition": "string", "hsk_level": 5 or 6}]
+      "vocabulary": [{"term": "string", "definition": "string", "hsk_level": 5 or 6, "example": "string"}]
     }
   `;
 
   try {
     const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    
-    // Clean up potential markdown formatting in response
+    const text = result.response.text();
     const jsonStr = text.replace(/```json\n?|\n?```/g, '');
     const data = JSON.parse(jsonStr);
 
+    // Clean article content: keep only the header and body, remove everything else
+    const cleanContent = content.split('---')[0].trim();
+
     // Format as Markdown
-    let output = `${content}\n\n---\n## English Translation\n${data.english_translation}\n\n## Key Vocabulary (HSK 5+)\n| Term | Definition | HSK Level |\n| --- | --- | --- |\n`;
+    let output = `${cleanContent}\n\n**URL:** [World Journal source](${url})\n\n---\n## ${data.english_title}\n${data.english_translation}\n\n## Key Vocabulary (HSK 5+)\n| Term | Definition | HSK | Example |\n| --- | --- | --- | --- |\n`;
     data.vocabulary.forEach(v => {
-      output += `| ${v.term} | ${v.definition} | ${v.hsk_level} |\n`;
+      output += `| ${v.term} | ${v.definition} | ${v.hsk_level} | ${v.example} |\n`;
     });
 
     await fs.writeFile(filePath, output);
