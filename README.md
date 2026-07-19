@@ -13,6 +13,20 @@ This project is a personal tool designed to scrape, preserve, and enhance writin
 - **Enrichment**: AI-powered translation and vocabulary extraction with HSK-level tagging.
 - **Robustness**: Handles pagination, logs failures, and uses polite request delays.
 
+## The Enhancement Pipeline
+The enhancement process uses the **Google Gemini API** (via the `@google/generative-ai` library) to process scraped Chinese articles.
+
+### How it works:
+1.  **Translation**: The model translates the article title and body into natural-sounding English.
+2.  **Vocabulary Extraction**: The model identifies terms that are HSK level 5 or higher.
+3.  **Frequency Sorting**: The model sorts the extracted vocabulary based on its approximate frequency in general Chinese usage (from most frequent to least frequent).
+4.  **Enrichment**: Each vocabulary item includes:
+    - English Definition.
+    - Estimated HSK Level (5 or 6).
+    - An example fragment taken directly from the article for context.
+
+*Note: This enrichment relies on the LLM's internal linguistic knowledge and training data, providing a robust, context-aware analysis without needing external static frequency tables.*
+
 ## Getting Started
 
 ### Prerequisites
@@ -20,7 +34,7 @@ This project is a personal tool designed to scrape, preserve, and enhance writin
 - A Google Gemini API Key
 
 ### Installation
-1. Clone this repository (or copy the files).
+1. Clone this repository.
 2. Install dependencies:
    ```bash
    npm install
