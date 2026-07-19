@@ -1,10 +1,14 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-const fs = require('fs-extra');
-const TurndownService = require('turndown');
-const yargs = require('yargs/yargs');
-const { hideBin } = require('yargs/helpers');
-const path = require('path');
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import fs from 'fs-extra';
+import TurndownService from 'turndown';
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const turndownService = new TurndownService();
 const argv = yargs(hideBin(process.argv)).argv;
