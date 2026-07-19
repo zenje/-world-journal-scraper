@@ -119,7 +119,10 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
 
 async function processAndSave(html, url, originalLink, isArchived, searchTerm) {
   const $ = cheerio.load(html);
-  $('script, style, .article-content__ads, .admarutag, [id^="div-gpt-ad"], .article-content__nav, .tips').remove();
+  // Aggressively remove unwanted elements
+  $('script, style, .article-content__ads, .admarutag, [id^="div-gpt-ad"], .article-content__nav, .tips, .article-content__sidebar, #div-gpt-ad-1617286621665-0, .article-content__lastnews, .article-content__nextnews').remove();
+  $('div:contains("上一则"), div:contains("下一则")').remove();
+  $('a[href*="from=wj_lastnews_story"], a[href*="from=wj_nextnews_story"]').parent().parent().remove();
 
   const title = $('h1.article-content__title').text().trim();
   const date = $('time.article-content__time').text().trim();
