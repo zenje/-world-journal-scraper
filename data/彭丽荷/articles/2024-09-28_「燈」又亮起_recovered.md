@@ -41,3 +41,53 @@
 「灯」亮的时候，我心中有亮光、手上有力量、脚下有方向，它要我沿著灯光的闪亮继续前行！
 
 [世界日报](http://web.archive.org/web/20241011084335/https://www.worldjournal.com/search/tagging/8877/世界日报) [旧金山](http://web.archive.org/web/20241011084335/https://www.worldjournal.com/search/tagging/8877/旧金山) [洛杉矶](http://web.archive.org/web/20241011084335/https://www.worldjournal.com/search/tagging/8877/洛杉矶)
+
+---
+## The "Lamp" Lights Up Again
+More than twenty years ago, I came to live with my daughter. Opening my suitcases, I distributed the local specialties I brought from Shanghai to my daughter, son-in-law, and my in-laws. After a flurry of excitement, I remained thrilled for days. Over the next month, my daughter took me to visit major cities like San Francisco and Los Angeles. Afterwards, my daughter told me that they were very busy with work and couldn't accompany me shopping or chatting every day. She said there was a large park near our house and suggested I go for a walk there every morning to find some friends to talk with.
+
+I had come from Shanghai, a familiar and bustling city, to live in San Diego in the American West. In this vast, sparsely populated land, the surrounding environment, neighborhoods, streets, and shops were vastly different from those in Shanghai. Although the environment was beautiful and the neighborhood was landscaped like a park, there were no pedestrians on the streets, no shops on either side of the road, and buying things required driving to the city center. I couldn't quite adapt all at once, thinking to myself that I could only slowly adjust and gradually get used to it.
+
+One day, I went to the park. It was huge, but I barely saw anyone. There were only two white-skinned, blue-eyed foreigners strolling with their dogs. My English was not good enough to communicate with them. So after my walk, I sat on a bench by myself in a daze, looking around aimlessly for something.
+
+Suddenly, a couple in their fifties approached me. "Are you Chinese?" the lady asked softly, greeting me. With a face full of smiles, I answered, "Yes." Hearing my reply, she immediately switched to accented Beijing-dialect Mandarin and said, "That's wonderful! We are from Taiwan. My husband's last name is Tang." I immediately greeted them, "Mr. Tang, Mrs. Tang, I am so happy to meet Chinese friends today!"
+
+When they learned that I was troubled by loneliness, they came up with a great idea: Mrs. Tang would bring me a copy of the previous day's "World Journal" every day. She said rather apologetically, "We read the newspaper first and will give it to you the next day. Although it is yesterday's news, it will help you understand many major events happening in the world, the situation in the US, and various literary and artistic news, which might help relieve your boredom."
+
+This made me incredibly happy. With the newspaper to keep me company, my spirits instantly lifted. Having food for my mind added joy to my life, and a "lamp" lit up in my heart.
+
+One day, I read various articles in the "Home" section. Next to them was a warm prompt: "As long as you pick up a pen, you are a writer." Reading this, I seemed to feel a rush of encouragement. I thought to myself: could I try being a writer too? So, I cheered myself up, mustered up my courage, thought it over, and picked up my pen to write my first short essay, with "Lamp" as the title.
+
+That was in the year 2000. At that time, we didn't use computers, the internet, or email; everything was done manually. To make sure the characters were clear, I used a printer to print out the characters one by one, then read and checked it repeatedly. I reviewed every character, every sentence, and even the punctuation marks several times. Once I thought it looked like a proper essay and made some sense, I boldly put it in an envelope and mailed it to the "Home" column of the World Journal.
+
+Every day, I looked forward to the next-day paper delivered by Mrs. Tang, hoping to see the essay "Lamp" appear in the "Home" column. I was too embarrassed to tell Mrs. Tang about my submission; if the essay wasn't accepted, it would be very awkward.
+
+I waited anxiously day after day. One day, Mrs. Tang said to me, "Mr. Tang's job has changed. He is being transferred to the headquarters in Los Angeles, and I will be moving with him."
+
+When Mrs. Tang said goodbye to me, we were both very reluctant to part. I thanked her for her care, but in my heart, I felt even more helpless. Not only could I no longer see the good friend who brought me newspapers every day, but I also lost contact with the World Journal. I had no way of knowing whether the essay "Lamp" was approved or published in the "Home" column. At that time, I felt a bit emotional. Should I let the "lamp" in my heart continue to light up my world, or should I just let it go out?
+
+After some time, I saw my in-law and told her about the situation. She was a warm and straightforward person. She said she had a friend whose family subscribed to the World Journal and received it daily. She asked her friend to help look for "Lamp" in the "Home" column. This friend went through newspapers from more than a month ago and finally found it with great difficulty. He quickly handed the newspaper to my in-law, who then hurriedly mailed it to me from San Francisco, which took a lot of effort and trouble.
+
+With the help of many people, I finally saw the article "Lamp" published in the "Home" section on September 30, 2000 (see picture). You can imagine how excited I was at the time! I was almost dancing with joy. The World Journal not only brought me happiness, but also provided me with a platform to tell my stories.
+
+I have a deep affection for the article "Lamp". Afterwards, I tried writing a few more essays like "Flowers", "Longevity", and "Both Teacher and Friend", all of which were accepted and published by the newspaper. However, I never knew when they would be published, or what they looked like in print, knowing nothing until I received the manuscript fee, which told me which piece was accepted and which was not.
+
+Spring passed and autumn came; more than twenty years flashed by in an instant. One day, while sorting through my files, I carefully looked at a yellowed old newspaper. "Lamp" instantly jumped into my view. This "lamp" was so familiar, so dear, and kept so perfectly intact. My subconscious reaction was that I must pick up the pen again, relight the "lamp" in my heart, and continue to write diligently to enrich my own happiness.
+
+Times change and technology progresses. Now, my essays can be viewed online in real time. The era of typing and mailing envelopes has already become a page turned in history. Recently, I have raised my pen again and written articles like "Prelude to Moving", "A String of Court Beads", and "Feng Ji Porcelain Shop", and the editorial department even notifies me in advance whether they will adopt or reject them.
+
+When the "lamp" is lit, I have light in my heart, strength in my hands, and direction under my feet. It guides me to keep moving forward along its shining light!
+
+## Key Vocabulary (HSK 5+)
+| Term | Definition | HSK | Example |
+| --- | --- | --- | --- |
+| 交流 | To communicate; to exchange; communication | 5 | 我的英语水平又不够和他们交流。 |
+| 鼓励 | To encourage; encouragement | 5 | 我看了后，似乎感受到阵阵鼓励 |
+| 兴奋 | Excited; excitement | 5 | 要知道我当时是多么兴奋！ |
+| 寂寞 | Lonely; lonesome; loneliness | 5 | 当他们知道我在为寂寞而发愁 |
+| 陆续 | One after another; successively | 5 | 我试著又陆续地写了一些「花」、「寿」、「亦师亦友」等作文 |
+| 尴尬 | Awkward; embarrassed; embarrassment | 5 | 如果作文没有被录用，我会很尴尬的。 |
+| 充实 | To enrich; to fulfill; substantial; rich | 5 | 继续努力耕耘，来充实自己的快乐。 |
+| 认可 | To approve; to accept; recognition; approval | 6 | 「灯」这篇作文是否得到家园栏目认可、有否录用？ |
+| 磨合 | To wear in; to break in; to adapt to each other; to adjust | 6 | 心想只能慢慢地磨合，逐渐习惯起来。 |
+| 周折 | Twists and turns; setbacks; trouble | 6 | 费了不少功夫和周折。 |
