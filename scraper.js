@@ -140,7 +140,7 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
     if (isRecoverMode) {
       console.log(`Trying archive for: ${article.titleLink}`);
       // Increased delay to avoid 429
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      await new Promise(resolve => setTimeout(resolve, 10000));
       try {
         const cleanUrl = article.titleLink.replace('?zh-cn', '');
         const archiveResp = await axios.get(`https://archive.org/wayback/available?url=${cleanUrl}`);
@@ -165,10 +165,10 @@ async function scrapeArticle(article, isRecoverMode, searchTerm) {
 }
 
 async function processAndSave(html, url, originalLink, isArchived, searchTerm) {
-  const $ = cheerio.load(html);
+  const $ = cheerio.load(html); console.log("DEBUG: Elements before removal:", $(".article-content__editor").length); console.log("DEBUG: Loaded HTML length:", html.length);
   $('script, style, .article-content__ads, .admarutag, [id^="div-gpt-ad"], .article-content__nav, .tips, .article-content__sidebar, #div-gpt-ad-1617286621665-0, .article-content__lastnews, .article-content__nextnews').remove();
   $('div:contains("上一则"), div:contains("下一则")').remove();
-  $('a[href*="from=wj_lastnews_story"], a[href*="from=wj_nextnews_story"]').parent().parent().remove();
+  $('a[href*="from=wj_lastnews_story"], a[href*="from=wj_nextnews_story"]').remove(); console.log("DEBUG: Elements after removal:", $(".article-content__editor").length);
 
   const title = $('h1.article-content__title').text().trim();
   const date = $('time.article-content__time').text().trim();
@@ -176,8 +176,9 @@ async function processAndSave(html, url, originalLink, isArchived, searchTerm) {
   const bodyHtml = $('section.article-content__editor').html();
 
   // Improved error logging
-  if (!title) console.error('Warning: Title parsing failed');
-  if (!bodyHtml) console.error('Warning: Body parsing failed');
+  if (!title) console.log('DEBUG: Title parsing failed, full HTML snippet:', $.html().substring(0, 500));
+  if (!bodyHtml) console.log('DEBUG: Body parsing failed, full HTML snippet:', $.html().substring(0, 500)); else console.log('DEBUG: Body parsing found, length:', bodyHtml.length);
+  
   if (!title || !bodyHtml) throw new Error('Content parsing failed');
 
   let markdown = turndownService.turndown(bodyHtml);
